@@ -2,7 +2,7 @@
 
 Direction GameEngine::moveDirection(int x, int y)
 {
-    bool checkUp, ckeckRight, checkDown, checkLeft = false;
+    bool checkUp, checkRight, checkDown, checkLeft = false;
 
     if (x > 0)
     {
@@ -22,19 +22,40 @@ Direction GameEngine::moveDirection(int x, int y)
     }
     if (checkUp)
     {
-        if (field[x][y+1] == 0) return UP;
+        if (field.field[x][y+1] == 0) return UP;
     }
     if (checkRight)
     {
-        if (field[x+1][y] == 0) return RIGHT;
+        if (field.field[x+1][y] == 0) return RIGHT;
     }
     if (checkDown)
     {
-        if (field[x][y-1] == 0) return DOWN;
+        if (field.field[x][y-1] == 0) return DOWN;
     }
     if (checkLeft)
     {
-        if (field[x-1][y] == 0) return LEFT;
+        if (field.field[x-1][y] == 0) return LEFT;
+    }
+    return NONE;
+}
+
+bool GameEngine::isGameOver()
+{
+    static vector<vector<int> > winConditionFirst = {{0,1,2,3},
+                                                     {4,5,6,7},
+                                                     {8,9,10,11},
+                                                     {12,13,14,15}};
+    static vector<vector<int> > winConditionSecond = {{1,2,3,4},
+                                                      {5,6,7,8},
+                                                      {9,10,11,12},
+                                                      {13,14,15,0}};
+    if ((field.field == winConditionFirst) || (field.field == winConditionSecond))
+    {
+        return false;
+    }
+    else
+    {
+        return true;
     }
 }
 
@@ -47,14 +68,35 @@ void GameEngine::move(int x, int y)
 {
     assert(x >= 0 && y >=0 && x < 4 && y < 4);
 
-    if (gameRunnig)
+    if (gameRunning)
     {
         switch (moveDirection(x, y))
         {
-            case Direction::UP:    {field[x][y+1] = field[x][y]; field[x][y] = 0; break;}
-            case Direction::RIGHT: {field[x+1][y] = field[x][y]; field[x][y] = 0; break;}
-            case Direction::DOWN:  {field[x][y-1] = field[x][y]; field[x][y] = 0; break;}
-            case Direction::LEFT:  {field[x-1][y] = field[x][y]; field[x][y] = 0; break;}
+            case UP:
+            {
+                field.field[x][y+1]  = field.field[x][y];
+                field.field[x][y] = 0;
+                break;
+            }
+            case RIGHT:
+            {
+                field.field[x+1][y]  = field.field[x][y];
+                field.field[x][y] = 0;
+                break;
+            }
+            case DOWN:
+            {
+                field.field[x][y-1] = field.field[x][y];
+                field.field[x][y] = 0;
+                break;
+            }
+            case LEFT:
+            {
+                field.field[x-1][y] = field.field[x][y];
+                field.field[x][y] = 0;
+                break;
+            }
+        default: break;
         }
         gameRunning = isGameOver();
     }

@@ -2,7 +2,7 @@
 #define FIELD_H
 
 #include <vector>
-#include <rand>
+#include <random>
 
 using namespace std;
 
@@ -25,13 +25,13 @@ struct Field
         while (it != initVector.end())
         {
             temp = rand() % 16;
-            if (initVector.find(temp) == initVector.end())
+            if (find(initVector.begin(), initVector.end(), temp) == initVector.end())
             {
                 initVector.push_back(temp);
                 ++it;
             }
         }
     }
-}
+};
 
 #endif // FIELD_H
