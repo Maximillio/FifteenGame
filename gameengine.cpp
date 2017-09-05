@@ -112,7 +112,6 @@ void GameEngine::move(int _x, int _y)
             }
         default: break;
         }
-
         render();
         gameRunning = isGameRunning();
     }
