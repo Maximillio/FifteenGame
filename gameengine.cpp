@@ -1,45 +1,58 @@
 #include "gameengine.h"
 
-Direction GameEngine::moveDirection(int x, int y)
+void GameEngine::render()
+{
+    emit clear();
+    for (int i = 0; i < 4; ++i)
+    {
+        for (int j = 0; j < 4; ++j)
+        {
+            if (field.field[i][j] != 0)
+                emit draw(i, j, field.field[i][j]);
+        }
+    }
+}
+
+Direction GameEngine::moveDirection(int _x, int _y)
 {
     bool checkUp, checkRight, checkDown, checkLeft = false;
 
-    if (x > 0)
+    if (_x > 0)
     {
         checkLeft = true;
     }
-    if (y > 0)
+    if (_y > 0)
     {
         checkDown = true;
     }
-    if (x < 3)
+    if (_x < 3)
     {
         checkRight = true;
     }
-    if (y < 3)
+    if (_y < 3)
     {
         checkUp = true;
     }
     if (checkUp)
     {
-        if (field.field[x][y+1] == 0) return UP;
+        if (field.field[_x][_y+1] == 0) return UP;
     }
     if (checkRight)
     {
-        if (field.field[x+1][y] == 0) return RIGHT;
+        if (field.field[_x+1][_y] == 0) return RIGHT;
     }
     if (checkDown)
     {
-        if (field.field[x][y-1] == 0) return DOWN;
+        if (field.field[_x][_y-1] == 0) return DOWN;
     }
     if (checkLeft)
     {
-        if (field.field[x-1][y] == 0) return LEFT;
+        if (field.field[_x-1][_y] == 0) return LEFT;
     }
     return NONE;
 }
 
-bool GameEngine::isGameOver()
+bool GameEngine::isGameRunning()
 {
     static vector<vector<int> > winConditionFirst = {{0,1,2,3},
                                                      {4,5,6,7},
@@ -64,40 +77,47 @@ GameEngine::GameEngine()
 
 }
 
-void GameEngine::move(int x, int y)
+void GameEngine::move(int _x, int _y)
 {
-    assert(x >= 0 && y >=0 && x < 4 && y < 4);
+    assert(_x >= 0 && _y >= 0 && _x < 4 && _y < 4);
 
     if (gameRunning)
     {
-        switch (moveDirection(x, y))
+        switch (moveDirection(_x, _y))
         {
             case UP:
             {
-                field.field[x][y+1]  = field.field[x][y];
-                field.field[x][y] = 0;
+                field.field[_x][_y+1] = field.field[_x][_y];
+                field.field[_x][_y] = 0;
                 break;
             }
             case RIGHT:
             {
-                field.field[x+1][y]  = field.field[x][y];
-                field.field[x][y] = 0;
+                field.field[_x+1][_y] = field.field[_x][_y];
+                field.field[_x][_y] = 0;
                 break;
             }
             case DOWN:
             {
-                field.field[x][y-1] = field.field[x][y];
-                field.field[x][y] = 0;
+                field.field[_x][_y-1] = field.field[_x][_y];
+                field.field[_x][_y] = 0;
                 break;
             }
             case LEFT:
             {
-                field.field[x-1][y] = field.field[x][y];
-                field.field[x][y] = 0;
+                field.field[_x-1][_y] = field.field[_x][_y];
+                field.field[_x][_y] = 0;
                 break;
             }
         default: break;
         }
-        gameRunning = isGameOver();
+
+        render();
+        gameRunning = isGameRunning();
     }
+}
+
+void GameEngine::initRender()
+{
+    render();
 }

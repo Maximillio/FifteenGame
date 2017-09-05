@@ -16,20 +16,25 @@ struct Field
         {
             field.push_back(temp);
         }
+        initField();
     }
     void initField()
     {
         vector<int> initVector;
-        vector<int>::iterator it = initVector.begin();
+        int counter = 0;
         int temp;
-        while (it != initVector.end())
+        while (counter != 16)
         {
             temp = rand() % 16;
             if (find(initVector.begin(), initVector.end(), temp) == initVector.end())
             {
                 initVector.push_back(temp);
-                ++it;
+                ++counter;
             }
+        }
+        for (int i = 0; i < 16; ++i)
+        {
+            field[i%4][i/4] = initVector[i];
         }
     }
 };

@@ -17,3 +17,5 @@ include(deployment.pri)
 HEADERS += \
     field.h \
     gameengine.h
+
+DISTFILES +=

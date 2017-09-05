@@ -1,21 +1,34 @@
 import QtQuick 2.5
 import QtQuick.Window 2.2
+import QtQuick.Controls 1.2
+import "Display.js" as Display
 
-Window {
+ApplicationWindow {
+    id: appWindow
     visible: true
-    width: 640
-    height: 480
-    title: qsTr("Hello")
+    width: Display.blockSize * 4
+    height: Display.blockSize * 4
+    title: qsTr("Fifteen")
 
-    MouseArea {
-        anchors.fill: parent
-        onClicked: {
-            Qt.quit();
+    function draw(_x, _y, _number) {
+        Display.draw(_x, _y, _number);
+    }
+    function clear() {
+        Display.clear();
+    }
+
+    Canvas {
+        visible: true;
+        id: canvas
+        width: appWindow.width
+        height: appWindow.height
+        MouseArea {
+            anchors.fill: parent
+            onClicked: {
+                gameEngine.move(mouse.x/Display.blockSize, mouse.y/Display.blockSize);
+            }
         }
     }
 
-    Text {
-        text: qsTr("Hello")
-        anchors.centerIn: parent
-    }
+
 }
