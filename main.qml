@@ -8,6 +8,11 @@ ApplicationWindow {
     visible: true
     width: Display.blockSize * 4
     height: Display.blockSize * 4
+    maximumHeight: height
+    maximumWidth:  width
+    minimumHeight: height
+    minimumWidth:  width
+
     title: qsTr("Fifteen")
 
     function draw(_x, _y, _number) {
@@ -15,6 +20,9 @@ ApplicationWindow {
     }
     function clear() {
         Display.clear();
+    }
+    function displayWinMessage() {
+        Display.createWinMessage();
     }
 
     Canvas {

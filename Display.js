@@ -17,3 +17,8 @@ function clear()
         context.pop().destroy();
     }
 }
+function createWinMessage()
+{
+    component = Qt.createComponent("qrc:/WinMessage.qml");
+    sprite = component.createObject(appWindow, {"fontSize": blockSize / 5});
+}

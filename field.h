@@ -3,6 +3,7 @@
 
 #include <vector>
 #include <random>
+#include <ctime>
 
 using namespace std;
 
@@ -23,6 +24,7 @@ struct Field
         vector<int> initVector;
         int counter = 0;
         int temp;
+        srand(std::time(0));
         while (counter != 16)
         {
             temp = rand() % 16;

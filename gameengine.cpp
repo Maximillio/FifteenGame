@@ -15,7 +15,7 @@ void GameEngine::render()
 
 Direction GameEngine::moveDirection(int _x, int _y)
 {
-    bool checkUp, checkRight, checkDown, checkLeft = false;
+    bool checkUp = false, checkRight = false, checkDown = false, checkLeft = false;
 
     if (_x > 0)
     {
@@ -54,16 +54,17 @@ Direction GameEngine::moveDirection(int _x, int _y)
 
 bool GameEngine::isGameRunning()
 {
-    static vector<vector<int> > winConditionFirst = {{0,1,2,3},
-                                                     {4,5,6,7},
-                                                     {8,9,10,11},
-                                                     {12,13,14,15}};
-    static vector<vector<int> > winConditionSecond = {{1,2,3,4},
-                                                      {5,6,7,8},
-                                                      {9,10,11,12},
-                                                      {13,14,15,0}};
+    static vector<vector<int> > winConditionFirst = {{0,4,8,12},
+                                                     {1,5,9,13},
+                                                     {2,6,10,14},
+                                                     {3,7,11,15}};
+    static vector<vector<int> > winConditionSecond = {{1,5,9,13},
+                                                      {2,6,10,14},
+                                                      {3,7,11,15},
+                                                      {4,8,12,0}};
     if ((field.field == winConditionFirst) || (field.field == winConditionSecond))
     {
+        emit displayWinMessage();
         return false;
     }
     else
