@@ -6,12 +6,8 @@ import "Display.js" as Display
 ApplicationWindow {
     id: appWindow
     visible: true
-    width: Display.blockSize * 4
-    height: Display.blockSize * 4
-    maximumHeight: height
-    maximumWidth:  width
-    minimumHeight: height
-    minimumWidth:  width
+    width: 600
+    height: 600 + toolBar.height
 
     title: qsTr("Fifteen")
 
@@ -25,15 +21,22 @@ ApplicationWindow {
         Display.createWinMessage();
     }
 
+    toolBar:ToolBar {
+                ToolButton {
+                    text: "Shuffle"
+                    }
+                }
+
+
     Canvas {
         visible: true;
         id: canvas
         width: appWindow.width
-        height: appWindow.height
+        height: appWindow.height - toolBar.height
         MouseArea {
             anchors.fill: parent
             onClicked: {
-                gameEngine.move(mouse.x/Display.blockSize, mouse.y/Display.blockSize);
+                gameEngine.move(mouse.x/(canvas.width/4), mouse.y/(canvas.height/4));
             }
         }
     }

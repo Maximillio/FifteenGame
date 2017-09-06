@@ -2,13 +2,44 @@ import QtQuick 2.0
 import QtQuick.Controls 1.2
 
 Image {
-    id: image
     source: "Tile.png"
+    fillMode: Image.Stretch
+    width: parent.width/4
+    height: parent.height/4
     property string text: "0"
+    property int xPos: 0
+    property int yPos: 0
+    property int duration: 100
+    x: xPos * width
+    y: yPos * height
     Text {
         id: textData
-        text: image.text
+        text: parent.text
         anchors.centerIn: parent
     }
+    Behavior on y {
+                NumberAnimation {
+                    duration: duration
+                    easing.type: Easing.InOutExpo
+                }
+            }
+    Behavior on x {
+                NumberAnimation {
+                    duration: duration
+                    easing.type: Easing.InOutExpo
+                }
+            }
+    Behavior on width {
+                NumberAnimation {
+                    duration: duration
+                    easing.type: Easing.InOutCubic
+                }
+            }
+    Behavior on height {
+                NumberAnimation {
+                    duration: duration
+                    easing.type: Easing.InOutCubic
+                }
+            }
 }
 
