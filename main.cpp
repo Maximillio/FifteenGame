@@ -18,6 +18,7 @@ int main(int argc, char *argv[])
         gameEngine    = new GameEngine();
         windowContext->setContextProperty("gameEngine", gameEngine);
         gameEngine->connect(gameEngine, SIGNAL(draw(QVariant, QVariant, QVariant)), qmlWindow, SLOT(draw(QVariant, QVariant, QVariant)));
+        gameEngine->connect(gameEngine, SIGNAL(moveTile(QVariant, QVariant, QVariant)), qmlWindow, SLOT(invokeMoveTitle(QVariant, QVariant, QVariant)));
         gameEngine->connect(gameEngine, SIGNAL(clear()), qmlWindow, SLOT(clear()));
         gameEngine->connect(gameEngine, SIGNAL(displayWinMessage()), qmlWindow, SLOT(displayWinMessage()));
         gameEngine->initRender();

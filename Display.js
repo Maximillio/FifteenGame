@@ -7,9 +7,11 @@ var context = [];
 function draw(_x, _y, _number)
 {
     component = Qt.createComponent("qrc:/Tile.qml");
-    sprite = component.createObject(canvas, {"xPos": _x, "yPos": _y, "text": _number});
+    sprite = component.createObject(canvas, {"xPos": _x, "yPos": _y, "number": _number});
+    appWindow.moveTile.connect(sprite.changePosition);
     context.push(sprite);
 }
+
 function clear()
 {
     while (context.length)

@@ -2,7 +2,7 @@
 
 void GameEngine::render()
 {
-    emit clear();
+    //emit clear();
     for (int i = 0; i < 4; ++i)
     {
         for (int j = 0; j < 4; ++j)
@@ -81,7 +81,8 @@ GameEngine::GameEngine()
 void GameEngine::move(int _x, int _y)
 {
     assert(_x >= 0 && _y >= 0 && _x < 4 && _y < 4);
-
+    int numberToMove = field.field[_x][_y];
+    int newX = _x, newY = _y;
     if (gameRunning)
     {
         switch (moveDirection(_x, _y))
@@ -90,29 +91,36 @@ void GameEngine::move(int _x, int _y)
             {
                 field.field[_x][_y+1] = field.field[_x][_y];
                 field.field[_x][_y] = 0;
+                ++newY;
                 break;
             }
             case RIGHT:
             {
                 field.field[_x+1][_y] = field.field[_x][_y];
                 field.field[_x][_y] = 0;
+                ++newX;
                 break;
             }
             case DOWN:
             {
                 field.field[_x][_y-1] = field.field[_x][_y];
                 field.field[_x][_y] = 0;
+                --newY;
                 break;
             }
             case LEFT:
             {
                 field.field[_x-1][_y] = field.field[_x][_y];
                 field.field[_x][_y] = 0;
+                --newX;
                 break;
             }
         default: break;
         }
-        render();
+        if ((_x != newX) || (_y != newY))
+        {
+            emit moveTile(newX, newY, numberToMove);
+        }
         gameRunning = isGameRunning();
     }
 }

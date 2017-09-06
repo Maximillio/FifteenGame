@@ -14,6 +14,10 @@ ApplicationWindow {
     function draw(_x, _y, _number) {
         Display.draw(_x, _y, _number);
     }
+    signal moveTile(int _x, int _y, int _number);
+    function invokeMoveTitle(_x, _y, _number) {
+        moveTile(_x, _y, _number);
+    }
     function clear() {
         Display.clear();
     }

@@ -6,7 +6,7 @@ Image {
     fillMode: Image.Stretch
     width: parent.width/4
     height: parent.height/4
-    property string text: "0"
+    property int number: 0
     property int xPos: 0
     property int yPos: 0
     property int duration: 100
@@ -14,8 +14,15 @@ Image {
     y: yPos * height
     Text {
         id: textData
-        text: parent.text
+        text: parent.number
         anchors.centerIn: parent
+    }
+    function changePosition(_x, _y, _number) {
+        if (number === _number)
+        {
+            xPos = _x;
+            yPos = _y;
+        }
     }
     Behavior on y {
                 NumberAnimation {
