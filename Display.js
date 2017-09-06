@@ -12,13 +12,6 @@ function draw(_x, _y, _number)
     context.push(sprite);
 }
 
-function clear()
-{
-    while (context.length)
-    {
-        context.pop().destroy();
-    }
-}
 function createWinMessage()
 {
     component = Qt.createComponent("qrc:/WinMessage.qml");

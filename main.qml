@@ -28,6 +28,7 @@ ApplicationWindow {
     toolBar:ToolBar {
                 ToolButton {
                     text: "Shuffle"
+                    onClicked: gameEngine.shuffle();
                     }
                 }
 

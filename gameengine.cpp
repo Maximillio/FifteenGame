@@ -2,7 +2,6 @@
 
 void GameEngine::render()
 {
-    //emit clear();
     for (int i = 0; i < 4; ++i)
     {
         for (int j = 0; j < 4; ++j)
@@ -75,7 +74,7 @@ bool GameEngine::isGameRunning()
 
 GameEngine::GameEngine()
 {
-
+    shuffle();
 }
 
 void GameEngine::move(int _x, int _y)
@@ -123,6 +122,123 @@ void GameEngine::move(int _x, int _y)
         }
         gameRunning = isGameRunning();
     }
+}
+
+void GameEngine::shuffle()
+{
+    vector<vector<int> > initVector = {{0,4,8,12},
+                                       {1,5,9,13},
+                                       {2,6,10,14},
+                                       {3,7,11,15}};
+    int counter = 0;
+    int zeroX = 0, zeroY = 0;
+    bool checkUp = false, checkRight = false, checkDown = false, checkLeft = false;
+    bool validNum;
+    int direction;
+    srand(std::time(0));
+    while (counter < SHUFFLE_LIMIT)
+    {
+        checkUp    = false;
+        checkRight = false;
+        checkDown  = false;
+        checkLeft  = false;
+        if (zeroY < 3)
+        {
+            checkUp = true;
+        }
+        if (zeroX < 3)
+        {
+            checkRight = true;
+        }
+        if (zeroY > 0)
+        {
+            checkDown = true;
+        }
+        if (zeroX > 0)
+        {
+            checkLeft = true;
+        }
+
+        validNum = false;
+        while (!validNum)
+        {
+            direction = rand() % 4 + 1;
+            switch(direction)
+            {
+                case UP:
+                {
+                    if (checkUp)
+                    {
+                        validNum = true;
+                    }
+                    break;
+                }
+                case RIGHT:
+                {
+                    if (checkRight)
+                    {
+                        validNum = true;
+                    }
+                    break;
+                }
+                case DOWN:
+                {
+                    if (checkDown)
+                    {
+                        validNum = true;
+                    }
+                    break;
+                }
+                case LEFT:
+                {
+                    if (checkLeft)
+                    {
+                        validNum = true;
+                    }
+                    break;
+                }
+            }
+
+        }
+        switch (direction)
+        {
+            case UP:
+            {
+                initVector[zeroX][zeroY] = initVector[zeroX][zeroY+1];
+                initVector[zeroX][zeroY+1] = 0;
+                ++zeroY;
+                break;
+            }
+            case RIGHT:
+            {
+                initVector[zeroX][zeroY] = initVector[zeroX+1][zeroY];
+                initVector[zeroX+1][zeroY] = 0;
+                ++zeroX;
+                break;
+            }
+            case DOWN:
+            {
+                initVector[zeroX][zeroY] = initVector[zeroX][zeroY-1];
+                initVector[zeroX][zeroY-1] = 0;
+                --zeroY;
+                break;
+            }
+            case LEFT:
+            {
+                initVector[zeroX][zeroY] = initVector[zeroX-1][zeroY];
+                initVector[zeroX-1][zeroY] = 0;
+                --zeroX;
+                break;
+            }
+        }
+        ++counter;
+    }
+    field.field = initVector;
+    for (int i = 0; i < 4; ++i)
+        for (int j = 0; j < 4; ++j)
+        {
+            emit moveTile(i,j, field.field[i][j]);
+        }
 }
 
 void GameEngine::initRender()

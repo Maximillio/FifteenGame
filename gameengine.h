@@ -4,7 +4,11 @@
 #include <QObject>
 #include <QVariant>
 #include <assert.h>
+#include <random>
+#include <ctime>
 #include <field.h>
+
+#define SHUFFLE_LIMIT 1000
 
 enum Direction {NONE = 0, UP = 1, RIGHT = 2, DOWN = 3, LEFT = 4};
 
@@ -24,6 +28,7 @@ public:
 
 public slots:
     void move(int _x, int _y);
+    void shuffle();
     void initRender();
 signals:
     void draw(QVariant _x, QVariant _y, QVariant _number);
