@@ -61,6 +61,7 @@ bool GameEngine::isGameRunning()
                                                       {2,6,10,14},
                                                       {3,7,11,15},
                                                       {4,8,12,0}};
+
     if ((field.field == winConditionFirst) || (field.field == winConditionSecond))
     {
         emit displayWinMessage();
@@ -126,6 +127,11 @@ void GameEngine::move(int _x, int _y)
 
 void GameEngine::shuffle()
 {
+    emit clearMessage();
+    if (!gameRunning)
+    {
+        gameRunning = true;
+    }
     vector<vector<int> > initVector = {{0,4,8,12},
                                        {1,5,9,13},
                                        {2,6,10,14},

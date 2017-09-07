@@ -15,6 +15,7 @@ Image {
     Text {
         id: textData
         text: parent.number
+        font.pointSize: parent.height/5;
         anchors.centerIn: parent
     }
     function changePosition(_x, _y, _number) {

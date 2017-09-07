@@ -33,7 +33,7 @@ public slots:
 signals:
     void draw(QVariant _x, QVariant _y, QVariant _number);
     void moveTile(QVariant _x, QVariant _y, QVariant _number);
-    void clear();
+    void clearMessage();
     void displayWinMessage();
 };
 

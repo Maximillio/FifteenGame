@@ -18,8 +18,8 @@ ApplicationWindow {
     function invokeMoveTitle(_x, _y, _number) {
         moveTile(_x, _y, _number);
     }
-    function clear() {
-        Display.clear();
+    function clearMessage() {
+        Display.clearMessage();
     }
     function displayWinMessage() {
         Display.createWinMessage();
