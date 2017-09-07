@@ -14,8 +14,8 @@ int main(int argc, char *argv[])
     QQmlContext* windowContext = engine.rootContext();
     GameEngine*  gameEngine;
     try
-    {
-        gameEngine    = new GameEngine();
+    {       
+        gameEngine = new GameEngine();
         windowContext->setContextProperty("gameEngine", gameEngine);
         gameEngine->connect(gameEngine, SIGNAL(draw(QVariant, QVariant, QVariant)), qmlWindow, SLOT(draw(QVariant, QVariant, QVariant)));
         gameEngine->connect(gameEngine, SIGNAL(moveTile(QVariant, QVariant, QVariant)), qmlWindow, SLOT(invokeMoveTitle(QVariant, QVariant, QVariant)));

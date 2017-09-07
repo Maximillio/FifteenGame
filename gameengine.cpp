@@ -136,11 +136,11 @@ void GameEngine::shuffle()
                                        {1,5,9,13},
                                        {2,6,10,14},
                                        {3,7,11,15}};
-    int counter = 0;
-    int zeroX = 0, zeroY = 0;
+    int  counter = 0;
+    int  zeroX = 0, zeroY = 0;
     bool checkUp = false, checkRight = false, checkDown = false, checkLeft = false;
     bool validNum;
-    int direction;
+    int  direction;
     srand(std::time(0));
     while (counter < SHUFFLE_LIMIT)
     {
