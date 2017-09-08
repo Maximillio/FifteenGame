@@ -6,8 +6,8 @@ void GameEngine::render()
     {
         for (int j = 0; j < 4; ++j)
         {
-            if (field.field[i][j] != 0)
-                emit draw(i, j, field.field[i][j]);
+            if (m_field.m_field[i][j] != 0)
+                emit draw(i, j, m_field.m_field[i][j]);
         }
     }
 }
@@ -34,35 +34,31 @@ Direction GameEngine::moveDirection(int _x, int _y)
     }
     if (checkUp)
     {
-        if (field.field[_x][_y+1] == 0) return UP;
+        if (m_field.m_field[_x][_y+1] == 0) return UP;
     }
     if (checkRight)
     {
-        if (field.field[_x+1][_y] == 0) return RIGHT;
+        if (m_field.m_field[_x+1][_y] == 0) return RIGHT;
     }
     if (checkDown)
     {
-        if (field.field[_x][_y-1] == 0) return DOWN;
+        if (m_field.m_field[_x][_y-1] == 0) return DOWN;
     }
     if (checkLeft)
     {
-        if (field.field[_x-1][_y] == 0) return LEFT;
+        if (m_field.m_field[_x-1][_y] == 0) return LEFT;
     }
     return NONE;
 }
 
 bool GameEngine::isGameRunning()
 {
-    static vector<vector<int> > winConditionFirst = {{0,4,8,12},
-                                                     {1,5,9,13},
-                                                     {2,6,10,14},
-                                                     {3,7,11,15}};
-    static vector<vector<int> > winConditionSecond = {{1,5,9,13},
+    static QVector<QVector<int> > winCondition = {{1,5,9,13},
                                                       {2,6,10,14},
                                                       {3,7,11,15},
                                                       {4,8,12,0}};
 
-    if ((field.field == winConditionFirst) || (field.field == winConditionSecond))
+    if (m_field.m_field == winCondition)
     {
         emit displayWinMessage();
         return false;
@@ -81,37 +77,37 @@ GameEngine::GameEngine()
 void GameEngine::move(int _x, int _y)
 {
     assert(_x >= 0 && _y >= 0 && _x < 4 && _y < 4);
-    int numberToMove = field.field[_x][_y];
+    int numberToMove = m_field.m_field[_x][_y];
     int newX = _x, newY = _y;
-    if (gameRunning)
+    if (m_gameRunning)
     {
         switch (moveDirection(_x, _y))
         {
             case UP:
             {
-                field.field[_x][_y+1] = field.field[_x][_y];
-                field.field[_x][_y] = 0;
+                m_field.m_field[_x][_y+1] = m_field.m_field[_x][_y];
+                m_field.m_field[_x][_y] = 0;
                 ++newY;
                 break;
             }
             case RIGHT:
             {
-                field.field[_x+1][_y] = field.field[_x][_y];
-                field.field[_x][_y] = 0;
+                m_field.m_field[_x+1][_y] = m_field.m_field[_x][_y];
+                m_field.m_field[_x][_y] = 0;
                 ++newX;
                 break;
             }
             case DOWN:
             {
-                field.field[_x][_y-1] = field.field[_x][_y];
-                field.field[_x][_y] = 0;
+                m_field.m_field[_x][_y-1] = m_field.m_field[_x][_y];
+                m_field.m_field[_x][_y] = 0;
                 --newY;
                 break;
             }
             case LEFT:
             {
-                field.field[_x-1][_y] = field.field[_x][_y];
-                field.field[_x][_y] = 0;
+                m_field.m_field[_x-1][_y] = m_field.m_field[_x][_y];
+                m_field.m_field[_x][_y] = 0;
                 --newX;
                 break;
             }
@@ -121,24 +117,29 @@ void GameEngine::move(int _x, int _y)
         {
             emit moveTile(newX, newY, numberToMove);
         }
-        gameRunning = isGameRunning();
+        m_gameRunning = isGameRunning();
     }
 }
 
 void GameEngine::shuffle()
 {
     emit clearMessage();
-    if (!gameRunning)
+    if (!m_gameRunning)
     {
-        gameRunning = true;
+        m_gameRunning = true;
     }
-    vector<vector<int> > initVector = {{0,4,8,12},
-                                       {1,5,9,13},
-                                       {2,6,10,14},
-                                       {3,7,11,15}};
+    QVector<QVector<int> > initVector = {{1,5,9,13},
+                                         {2,6,10,14},
+                                         {3,7,11,15},
+                                         {4,8,12,0}};
     int  counter = 0;
-    int  zeroX = 0, zeroY = 0;
-    bool checkUp = false, checkRight = false, checkDown = false, checkLeft = false;
+    int  zeroX   = 3,
+         zeroY   = 3;
+
+    bool checkUp    = false,
+         checkRight = false,
+         checkDown  = false,
+         checkLeft  = false;
     bool validNum;
     int  direction;
     srand(std::time(0));
@@ -150,7 +151,7 @@ void GameEngine::shuffle()
         checkLeft  = false;
         if (zeroY < 3)
         {
-            checkUp = true;
+            checkUp    = true;
         }
         if (zeroX < 3)
         {
@@ -158,11 +159,11 @@ void GameEngine::shuffle()
         }
         if (zeroY > 0)
         {
-            checkDown = true;
+            checkDown  = true;
         }
         if (zeroX > 0)
         {
-            checkLeft = true;
+            checkLeft  = true;
         }
 
         validNum = false;
@@ -210,28 +211,28 @@ void GameEngine::shuffle()
         {
             case UP:
             {
-                initVector[zeroX][zeroY] = initVector[zeroX][zeroY+1];
+                initVector[zeroX][zeroY]   = initVector[zeroX][zeroY+1];
                 initVector[zeroX][zeroY+1] = 0;
                 ++zeroY;
                 break;
             }
             case RIGHT:
             {
-                initVector[zeroX][zeroY] = initVector[zeroX+1][zeroY];
+                initVector[zeroX][zeroY]   = initVector[zeroX+1][zeroY];
                 initVector[zeroX+1][zeroY] = 0;
                 ++zeroX;
                 break;
             }
             case DOWN:
             {
-                initVector[zeroX][zeroY] = initVector[zeroX][zeroY-1];
+                initVector[zeroX][zeroY]   = initVector[zeroX][zeroY-1];
                 initVector[zeroX][zeroY-1] = 0;
                 --zeroY;
                 break;
             }
             case LEFT:
             {
-                initVector[zeroX][zeroY] = initVector[zeroX-1][zeroY];
+                initVector[zeroX][zeroY]   = initVector[zeroX-1][zeroY];
                 initVector[zeroX-1][zeroY] = 0;
                 --zeroX;
                 break;
@@ -239,11 +240,11 @@ void GameEngine::shuffle()
         }
         ++counter;
     }
-    field.field = initVector;
+    m_field.m_field = initVector;
     for (int i = 0; i < 4; ++i)
         for (int j = 0; j < 4; ++j)
         {
-            emit moveTile(i,j, field.field[i][j]);
+            emit moveTile(i,j, m_field.m_field[i][j]);
         }
 }
 

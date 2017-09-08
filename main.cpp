@@ -23,7 +23,7 @@ int main(int argc, char *argv[])
         gameEngine->connect(gameEngine, SIGNAL(clearMessage()), qmlWindow, SLOT(clearMessage()));
         gameEngine->initRender();
     }
-    catch(std::exception& ex)
+    catch (std::exception& ex)
     {
         if (gameEngine)
         {

@@ -8,21 +8,13 @@
 #include <ctime>
 #include <field.h>
 
-#define SHUFFLE_LIMIT 1000
+const int SHUFFLE_LIMIT = 1000;
 
 enum Direction {NONE = 0, UP = 1, RIGHT = 2, DOWN = 3, LEFT = 4};
 
 class GameEngine : public QObject
 {
     Q_OBJECT
-private:
-    Field field;
-    bool gameRunning = true;
-
-    void render();
-
-    Direction moveDirection(int _x, int _y);
-    bool isGameRunning();
 public:
     GameEngine();
 
@@ -35,6 +27,13 @@ signals:
     void moveTile(QVariant _x, QVariant _y, QVariant _number);
     void clearMessage();
     void displayWinMessage();
+private:
+    Field m_field;
+    bool  m_gameRunning = true;
+private:
+    void render();
+    Direction moveDirection(int _x, int _y);
+    bool isGameRunning();
 };
 
 #endif // GAMEENGINE_H

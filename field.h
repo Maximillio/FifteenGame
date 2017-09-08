@@ -1,19 +1,19 @@
 #ifndef FIELD_H
 #define FIELD_H
 
-#include <vector>
+#include <QVector>
 
 using namespace std;
 
 struct Field
 {
-    vector<vector<int> > field;
+    QVector<QVector<int> > m_field;
     Field()
     {
-        vector<int> temp (4);
+        QVector<int> temp (4);
         for (int i = 0; i < 4; ++i)
         {
-            field.push_back(temp);
+            m_field.push_back(temp);
         }
     }
 };
