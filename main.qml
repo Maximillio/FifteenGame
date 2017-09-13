@@ -1,50 +1,61 @@
 import QtQuick 2.5
 import QtQuick.Window 2.2
 import QtQuick.Controls 1.2
+import QtQuick.Dialogs 1.2
 import "Display.js" as Display
 
-ApplicationWindow {
+
+
+Window {
     id: appWindow
-    visible: true
     width: 600
-    height: 600 + toolBar.height
-
-    title: qsTr("Fifteen")
-
-    function draw(_x, _y, _number) {
-        Display.draw(_x, _y, _number);
-    }
-    signal moveTile(int _x, int _y, int _number);
-    function invokeMoveTitle(_x, _y, _number) {
-        moveTile(_x, _y, _number);
-    }
-    function clearMessage() {
-        Display.clearMessage();
-    }
-    function displayWinMessage() {
-        Display.createWinMessage();
-    }
-
-    toolBar:ToolBar {
-                ToolButton {
-                    text: "Shuffle"
-                    onClicked: gameEngine.shuffle();
-                    }
-                }
-
-
-    Canvas {
-        visible: true;
-        id: canvas
-        width: appWindow.width
-        height: appWindow.height - toolBar.height
-        MouseArea {
+    height: 650
+    visible: true
+    ToolBar {
+        id: toolBar
+        Row{
             anchors.fill: parent
-            onClicked: {
-                gameEngine.move(mouse.x/(canvas.width/4), mouse.y/(canvas.height/4));
+            ToolButton {
+                text: qsTr("Shuffle")
+                onClicked: gameModel.shuffle()
             }
         }
     }
+    Connections {
+        target: gameModel
+        onVictory: messageDialog.open();
+    }
 
+    GridView {
+        y: toolBar.height
+        width: appWindow.width
+        height: appWindow.height - toolBar.height
+        model: gameModel
+        cellWidth: width / 4
+        cellHeight: height / 4
+        delegate: Tile{width: parent.width/4; height: parent.height/4; numberValue: number;}
+        MouseArea {
+            anchors.fill: parent
+            onClicked: gameModel.moveTile(parent.indexAt(mouse.x, mouse.y));
+        }
+        displaced: Transition {
+                NumberAnimation { properties: "x,y"; duration: 200; easing.type: Easing.InOutCubic }
+            }
+        move: Transition {
+                NumberAnimation { properties: "x,y"; duration: 200; easing.type: Easing.InOutCubic }
+            }
+        populate: Transition {
+                NumberAnimation { properties: "x,y"; duration: 500; easing.type: Easing.InOutCubic }
+        }
 
+    }
+    MessageDialog {
+        id: messageDialog
+        standardButtons: StandardButton.Close | StandardButton.Ok
+        visible: false
+            title: "You have solved the puzzle!"
+            text: "Do you want to restart?"
+            onAccepted: gameModel.shuffle()
+            onRejected: appWindow.close()
+    }
 }

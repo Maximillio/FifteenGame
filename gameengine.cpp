@@ -1,16 +1,5 @@
 #include "gameengine.h"
 
-void GameEngine::render()
-{
-    for (int i = 0; i < 4; ++i)
-    {
-        for (int j = 0; j < 4; ++j)
-        {
-            if (m_field.m_field[i][j] != 0)
-                emit draw(i, j, m_field.m_field[i][j]);
-        }
-    }
-}
 
 Direction GameEngine::moveDirection(int _x, int _y)
 {
@@ -54,13 +43,13 @@ Direction GameEngine::moveDirection(int _x, int _y)
 bool GameEngine::isGameRunning()
 {
     static QVector<QVector<int> > winCondition = {{1,5,9,13},
-                                                      {2,6,10,14},
-                                                      {3,7,11,15},
-                                                      {4,8,12,0}};
+                                                  {2,6,10,14},
+                                                  {3,7,11,15},
+                                                  {4,8,12,0}};
 
     if (m_field.m_field == winCondition)
     {
-        emit displayWinMessage();
+        emit victory();
         return false;
     }
     else
@@ -77,7 +66,7 @@ GameEngine::GameEngine()
 void GameEngine::move(int _x, int _y)
 {
     assert(_x >= 0 && _y >= 0 && _x < 4 && _y < 4);
-    int numberToMove = m_field.m_field[_x][_y];
+//    int numberToMove = m_field.m_field[_x][_y];
     int newX = _x, newY = _y;
     if (m_gameRunning)
     {
@@ -86,36 +75,37 @@ void GameEngine::move(int _x, int _y)
             case UP:
             {
                 m_field.m_field[_x][_y+1] = m_field.m_field[_x][_y];
-                m_field.m_field[_x][_y] = 0;
+                m_field.m_field[_x][_y]   = 0;
                 ++newY;
                 break;
             }
             case RIGHT:
             {
                 m_field.m_field[_x+1][_y] = m_field.m_field[_x][_y];
-                m_field.m_field[_x][_y] = 0;
+                m_field.m_field[_x][_y]   = 0;
                 ++newX;
                 break;
             }
             case DOWN:
             {
                 m_field.m_field[_x][_y-1] = m_field.m_field[_x][_y];
-                m_field.m_field[_x][_y] = 0;
+                m_field.m_field[_x][_y]   = 0;
                 --newY;
                 break;
             }
             case LEFT:
             {
                 m_field.m_field[_x-1][_y] = m_field.m_field[_x][_y];
-                m_field.m_field[_x][_y] = 0;
+                m_field.m_field[_x][_y]   = 0;
                 --newX;
                 break;
             }
+
         default: break;
         }
-        if ((_x != newX) || (_y != newY))
+        if (_x != newX || _y != newY)
         {
-            emit moveTile(newX, newY, numberToMove);
+            emit moveTile(_x+4*_y, newX+4*newY);
         }
         m_gameRunning = isGameRunning();
     }
@@ -123,7 +113,6 @@ void GameEngine::move(int _x, int _y)
 
 void GameEngine::shuffle()
 {
-    emit clearMessage();
     if (!m_gameRunning)
     {
         m_gameRunning = true;
@@ -132,16 +121,19 @@ void GameEngine::shuffle()
                                          {2,6,10,14},
                                          {3,7,11,15},
                                          {4,8,12,0}};
-    int  counter = 0;
-    int  zeroX   = 3,
-         zeroY   = 3;
+    m_field.m_field = initVector;
+    emit setData();
+
+    int  counter = 0,
+         zeroX   = 3,
+         zeroY   = 3,
+         direction;
 
     bool checkUp    = false,
          checkRight = false,
          checkDown  = false,
-         checkLeft  = false;
-    bool validNum;
-    int  direction;
+         checkLeft  = false,
+         validNum;
     srand(std::time(0));
     while (counter < SHUFFLE_LIMIT)
     {
@@ -214,6 +206,7 @@ void GameEngine::shuffle()
                 initVector[zeroX][zeroY]   = initVector[zeroX][zeroY+1];
                 initVector[zeroX][zeroY+1] = 0;
                 ++zeroY;
+                emit moveTile(zeroX+4*(zeroY-1), zeroX+4*zeroY);
                 break;
             }
             case RIGHT:
@@ -221,6 +214,7 @@ void GameEngine::shuffle()
                 initVector[zeroX][zeroY]   = initVector[zeroX+1][zeroY];
                 initVector[zeroX+1][zeroY] = 0;
                 ++zeroX;
+                emit moveTile((zeroX-1)+4*zeroY, zeroX+4*zeroY);
                 break;
             }
             case DOWN:
@@ -228,6 +222,7 @@ void GameEngine::shuffle()
                 initVector[zeroX][zeroY]   = initVector[zeroX][zeroY-1];
                 initVector[zeroX][zeroY-1] = 0;
                 --zeroY;
+                emit moveTile(zeroX+4*(zeroY+1), zeroX+4*zeroY);
                 break;
             }
             case LEFT:
@@ -235,20 +230,35 @@ void GameEngine::shuffle()
                 initVector[zeroX][zeroY]   = initVector[zeroX-1][zeroY];
                 initVector[zeroX-1][zeroY] = 0;
                 --zeroX;
+                emit moveTile((zeroX+1)+4*zeroY, zeroX+4*zeroY);
                 break;
             }
         }
         ++counter;
     }
     m_field.m_field = initVector;
-    for (int i = 0; i < 4; ++i)
-        for (int j = 0; j < 4; ++j)
-        {
-            emit moveTile(i,j, m_field.m_field[i][j]);
-        }
 }
 
-void GameEngine::initRender()
+int GameEngine::getFieldValue(int _row, int _column) const
 {
-    render();
+    if ((_row < m_field.m_field.size())
+            && (_column < m_field.m_field[0].size()))
+    {
+        return m_field.m_field[_row][_column];
+    }
+    else
+    {
+        return -1;
+    }
 }
+
+unsigned int GameEngine::getRowCount() const
+{
+    return m_field.m_field.size();
+}
+
+unsigned int GameEngine::getColumnCount() const
+{
+    return m_field.m_field[0].size();
+}
+

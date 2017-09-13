@@ -15,7 +15,7 @@ function draw(_x, _y, _number)
 function createWinMessage()
 {
     component  = Qt.createComponent("qrc:/WinMessage.qml");
-    sprite     = component.createObject(appWindow, {"fontSize": appWindow / 5});
+    sprite     = component.createObject(appWindow, {});
     winMessage = sprite;
 }
 function clearMessage()

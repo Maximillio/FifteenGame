@@ -17,21 +17,19 @@ class GameEngine : public QObject
     Q_OBJECT
 public:
     GameEngine();
-
-public slots:
     void move(int _x, int _y);
     void shuffle();
-    void initRender();
+    int  getFieldValue(int _row, int _column) const;
+    unsigned int getRowCount() const;
+    unsigned int getColumnCount() const;
 signals:
-    void draw(QVariant _x, QVariant _y, QVariant _number);
-    void moveTile(QVariant _x, QVariant _y, QVariant _number);
-    void clearMessage();
-    void displayWinMessage();
+    void moveTile(int _index, int _newIndex);
+    void setData();
+    void victory();
 private:
     Field m_field;
     bool  m_gameRunning = true;
 private:
-    void render();
     Direction moveDirection(int _x, int _y);
     bool isGameRunning();
 };

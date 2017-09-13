@@ -4,6 +4,5 @@
         <file>Display.js</file>
         <file>Tile.qml</file>
         <file>Tile.png</file>
-        <file>WinMessage.qml</file>
     </qresource>
 </RCC>

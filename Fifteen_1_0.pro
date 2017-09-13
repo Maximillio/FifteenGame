@@ -1,11 +1,11 @@
 TEMPLATE = app
 
 QT += qml quick
-QT += widgets
 CONFIG += c++11
 
 SOURCES += main.cpp \
-    gameengine.cpp
+    gameengine.cpp \
+    gamemodel.cpp
 
 RESOURCES += qml.qrc
 
@@ -17,6 +17,7 @@ include(deployment.pri)
 
 HEADERS += \
     field.h \
-    gameengine.h
+    gameengine.h \
+    gamemodel.h
 
 DISTFILES +=
